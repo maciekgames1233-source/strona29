@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skyline | Strefa marzeń</title>
+    <style>
+      :root { --ink:#382039; --muted:#80677e; --pink:#e9559d; --pink-deep:#c9367e; --lilac:#9b82e8; --line:rgba(180,93,145,.18); --shadow:0 24px 70px rgba(130,50,101,.16); }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { margin:0; min-height:100vh; overflow-x:hidden; color:var(--ink); font-family:Georgia,"Times New Roman",serif; background:#fff7fb; }
+      body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(circle at 90% 10%,rgba(239,151,201,.33),transparent 28%),radial-gradient(circle at 5% 80%,rgba(183,162,246,.23),transparent 26%); z-index:-2; }
+      .background-decor { position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
+      .star { position:absolute; top:-10px; left:var(--left); width:var(--size); height:var(--size); border-radius:50%; background:#fff; box-shadow:0 0 8px 2px rgba(255,126,190,.75); opacity:0; animation:fall var(--duration) linear infinite; animation-delay:var(--delay); }
+      @keyframes fall { 0% { transform:translate3d(0,-20px,0) scale(.5); opacity:0; } 15% { opacity:.9; } 70% { opacity:.75; } 100% { transform:translate3d(var(--drift),110vh,0) scale(1); opacity:0; } }
+      .background-kitty { position:absolute; left:var(--x); top:var(--y); width:var(--width); height:auto; opacity:.27; transform:rotate(var(--rotation)); filter:drop-shadow(0 8px 12px rgba(202,67,135,.12)); }
+      .page { width:min(1180px,calc(100% - 42px)); margin:0 auto; }
+      .topbar { display:flex; justify-content:space-between; align-items:center; padding:25px 0; font-family:"Segoe UI",sans-serif; }
+      .brand { display:flex; align-items:center; gap:10px; font-size:1.25rem; font-weight:800; letter-spacing:.03em; }
+      .brand-mark { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; color:white; background:linear-gradient(135deg,var(--pink),var(--lilac)); box-shadow:0 8px 18px rgba(208,68,139,.22); }
+      .nav { display:flex; gap:28px; color:var(--muted); font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+      .nav a { color:inherit; text-decoration:none; } .nav a:hover { color:var(--pink-deep); }
+      .hero { display:grid; grid-template-columns:1.04fr .96fr; gap:70px; align-items:center; min-height:calc(100vh - 85px); padding:45px 0 85px; }
+      .eyebrow { display:inline-flex; align-items:center; gap:9px; color:var(--pink-deep); font-family:"Segoe UI",sans-serif; font-size:.75rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; }
+      .eyebrow::before { content:""; width:30px; height:2px; background:var(--pink); }
+      h1 { margin:18px 0; max-width:580px; font-size:clamp(3.5rem,7vw,6.7rem); line-height:.92; letter-spacing:-.045em; font-weight:700; } h1 em { color:var(--pink); font-style:normal; }
+      .lead { max-width:450px; margin:0 0 30px; color:var(--muted); font-size:1.05rem; line-height:1.7; }
+      .feature-row { display:flex; gap:22px; margin-top:35px; color:var(--muted); font-family:"Segoe UI",sans-serif; font-size:.78rem; } .feature { display:grid; gap:6px; } .feature strong { color:var(--ink); font-size:.9rem; }
+      .gallery { display:grid; grid-template-columns:1.18fr .82fr; grid-template-rows:1fr 1fr; gap:14px; min-height:520px; }
+      .gallery-item { position:relative; min-height:0; overflow:hidden; border:7px solid rgba(255,255,255,.82); border-radius:26px; background:#f5dce9; box-shadow:0 18px 40px rgba(130,50,101,.13); }
+      .gallery-item:first-child { grid-row:1 / 3; }
+      .gallery-item img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+      .gallery-item:hover img { transform:scale(1.04); }
+      .gallery-note { margin:17px auto 0; color:var(--muted); font-family:"Segoe UI",sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.08em; line-height:1.5; text-align:center; }
+      .gallery-note strong { display:block; margin-bottom:3px; color:var(--pink-deep); font-size:.9rem; letter-spacing:.1em; }
+      .access-panel { position:relative; padding:13px; border:1px solid rgba(255,255,255,.8); border-radius:32px; background:rgba(255,255,255,.54); box-shadow:var(--shadow); backdrop-filter:blur(18px); }
+      .access-inner { padding:37px 34px 31px; border:1px solid var(--line); border-radius:23px; background:rgba(255,251,253,.8); }
+      .logo-wrap { display:flex; justify-content:center; margin:5px 0 20px; } .logo { width:min(235px,70vw); max-width:100%; border-radius:20px; filter:drop-shadow(0 14px 18px rgba(159,50,111,.12)); }
+      .dedication { display:grid; gap:4px; margin:0 auto 17px; max-width:520px; color:var(--pink-deep); font-family:"Segoe UI",sans-serif; font-size:.88rem; font-weight:800; letter-spacing:.06em; line-height:1.5; text-align:center; }
+      .dedication span { color:var(--muted); font-size:.72rem; font-weight:600; letter-spacing:.04em; }
+      .wish-box { padding:14px 0 20px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); color:var(--muted); font-family:"Segoe UI",sans-serif; font-size:.78rem; line-height:1.65; text-align:center; } .wish-box strong { display:block; color:var(--ink); font-family:Georgia,serif; font-size:1.16rem; }
+      form { display:grid; gap:16px; margin-top:24px; } .field { display:grid; gap:8px; } .prompt { color:var(--ink); font-family:"Segoe UI",sans-serif; font-size:.8rem; font-weight:700; text-align:center; }
+        form { display:grid; gap:16px; margin-top:24px; } .field { display:grid; gap:8px; } .prompt { color:var(--ink); font-family:"Segoe UI",sans-serif; font-size:.8rem; font-weight:700; text-align:center; } .prompt[for="passwordOne"]::after { content:"(podpowiedź masz na zdjęciu)"; display:block; margin-top:4px; color:var(--pink-deep); font-size:.74rem; font-style:italic; font-weight:400; }
+      input { width:100%; border:1px solid var(--line); border-radius:13px; padding:15px 16px; outline:none; color:var(--ink); background:rgba(255,255,255,.76); font:.95rem "Segoe UI",sans-serif; transition:.2s ease; } input:focus { border-color:var(--pink); box-shadow:0 0 0 4px rgba(233,85,157,.12); } input::placeholder { color:#b69daf; }
+      button { border:0; border-radius:13px; padding:15px 20px; color:white; background:linear-gradient(110deg,var(--pink-deep),var(--pink),var(--lilac)); font:700 .85rem "Segoe UI",sans-serif; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; box-shadow:0 13px 24px rgba(201,54,126,.22); transition:transform .2s ease,box-shadow .2s ease; } button:hover { transform:translateY(-2px); box-shadow:0 16px 27px rgba(201,54,126,.3); }
+      .message { min-height:20px; color:var(--pink-deep); font:600 .8rem "Segoe UI",sans-serif; text-align:center; } .form-card.error { animation:shake .35s ease; } @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+      .floating { position:absolute; display:grid; place-items:center; width:57px; height:57px; border:6px solid rgba(255,255,255,.68); border-radius:50%; color:white; font-size:1.35rem; background:linear-gradient(135deg,#f485ba,#b38ded); box-shadow:0 13px 25px rgba(167,80,142,.18); animation:float 4s ease-in-out infinite; } .floating.one{top:-18px;right:22px}.floating.two{bottom:44px;left:-25px;width:45px;height:45px;font-size:1rem;animation-delay:-1.5s} @keyframes float{50%{transform:translateY(-9px) rotate(8deg)}}
+      @media (max-width:800px){.hero{grid-template-columns:1fr;gap:42px;padding-top:35px}.gallery{min-height:440px;max-width:560px;margin:auto}.access-panel{max-width:560px;margin:auto}} @media (max-width:520px){.page{width:min(100% - 28px,460px)}.nav{display:none}.topbar{padding:18px 0}.hero{min-height:auto;padding:45px 0 55px}.gallery{min-height:390px;gap:9px}.gallery-item{border-width:5px;border-radius:19px}.access-inner{padding:29px 20px 24px}.feature-row{gap:13px}}
+    </style>
+  </head>
+  <body>
+    <div class="background-decor" aria-hidden="true">
+      <span class="star" style="--left:7%;--size:3px;--duration:9s;--delay:0s;--drift:18px;"></span>
+      <span class="star" style="--left:16%;--size:2px;--duration:12s;--delay:2s;--drift:-14px;"></span>
+      <span class="star" style="--left:28%;--size:4px;--duration:10s;--delay:4s;--drift:22px;"></span>
+      <span class="star" style="--left:42%;--size:2px;--duration:8s;--delay:1s;--drift:-18px;"></span>
+      <span class="star" style="--left:55%;--size:3px;--duration:13s;--delay:5s;--drift:12px;"></span>
+      <span class="star" style="--left:68%;--size:2px;--duration:9s;--delay:3s;--drift:-24px;"></span>
+      <span class="star" style="--left:79%;--size:4px;--duration:11s;--delay:6s;--drift:16px;"></span>
+      <span class="star" style="--left:92%;--size:2px;--duration:10s;--delay:1.5s;--drift:-12px;"></span>
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:4%;--y:16%;--width:54px;--rotation:-16deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:24%;--y:76%;--width:42px;--rotation:13deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:73%;--y:13%;--width:49px;--rotation:12deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:91%;--y:62%;--width:39px;--rotation:-19deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:61%;--y:84%;--width:45px;--rotation:8deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:14%;--y:42%;--width:34px;--rotation:22deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:36%;--y:7%;--width:38px;--rotation:-11deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:48%;--y:91%;--width:32px;--rotation:17deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:83%;--y:38%;--width:35px;--rotation:-8deg;" />
+      <img class="background-kitty" src="emotka.png" alt="" style="--x:2%;--y:88%;--width:30px;--rotation:10deg;" />
+    </div>
+    <main class="page">
+      <section class="hero" id="start">
+        <div><div class="dedication">to dla Ciebie, Wika<span>od Twojej najukochańszej Ewy i kulki Maćka</span></div><div class="gallery" aria-label="Galeria zdjęć"><div class="gallery-item"><img src="1.jpg" alt="Zdjęcie pierwsze" /></div><div class="gallery-item"><img src="2.jpg" alt="Zdjęcie drugie" /></div><div class="gallery-item"><img src="3.jpg" alt="Zdjęcie trzecie" /></div></div><div class="gallery-note"><strong>aby przejść dalej, wpisz hasła</strong>(z małej litery)</div></div>
+        <section class="access-panel" id="wejscie"><span class="floating one">✦</span><span class="floating two">♡</span><div class="access-inner" id="formCard"><div class="logo-wrap"><img class="logo" src="logo.jpg" alt="Skyline logo" onerror="this.style.display='none';" /></div><div class="wish-box">Wszystkiego najlepszego<strong>Wika</strong>Spełnienia marzeń</div><form id="loginForm" novalidate><div class="field"><label class="prompt" for="passwordOne">Coś co uwielbiasz</label><input id="passwordOne" type="password" placeholder="Wpisz pierwsze hasło" /></div><div class="field"><label class="prompt" for="passwordTwo">Coś co uwielbiasz jeszcze bardziej najbardziej na calutkim świecie</label><input id="passwordTwo" type="password" placeholder="Wpisz drugie hasło" /></div><button type="submit">Otwórz moje miejsce&nbsp; →</button><div class="message" id="message" aria-live="polite"></div></form></div></section>
+      </section>
+    </main>
+    <script>
+      const form = document.getElementById('loginForm'); const card = document.getElementById('formCard'); const message = document.getElementById('message');
+      form.addEventListener('submit', function (event) { event.preventDefault(); const passOne = document.getElementById('passwordOne').value.trim().toLowerCase(); const passTwo = document.getElementById('passwordTwo').value.trim().toLowerCase(); if (passOne === 'skyline' && passTwo === 'ewa') { message.textContent = 'Hasła poprawne. Przekierowanie...'; window.location.href = 'next.html'; return; } card.classList.remove('error'); void card.offsetWidth; card.classList.add('error'); message.textContent = 'Niepoprawne hasła. Spróbuj jeszcze raz.'; });
+    </script>
+  </body>
+</html>
